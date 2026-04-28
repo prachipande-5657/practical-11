@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HTML5 API Playground 😎</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg,#1e1e2f,#2c3e50);
+        color: white;
+        text-align: center;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1 { margin-bottom: 5px; }
+
+    .container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .box {
+        width: 300px;
+        min-height: 250px;
+        border: 2px dashed #fff;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 10px;
+    }
+
+    .item {
+        background: #ff6b6b;
+        padding: 10px;
+        margin: 5px;
+        cursor: grab;
+        border-radius: 5px;
+    }
+
+    .dropzone {
+        background: rgba(255,255,255,0.1);
+    }
+
+    button {
+        padding: 10px;
+        margin-top: 10px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+    }
+
+    textarea {
+        width: 90%;
+        height: 120px;
+        margin-top: 10px;
+    }
+
+    .glow {
+        color: #00ffcc;
+    }
+</style>
+</head>
+<body>
+
+<h1>🔥 HTML5 APIs Playground 🔥</h1>
+<p>Drag, location aur storage — sab ek hi jagah 😏</p>
+
+<div class="container">
+
+    <!-- DRAG DROP -->
+    <div class="box dropzone" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h3>🖱️ Drag & Drop Zone</h3>
+        <div id="item1" class="item" draggable="true" ondragstart="drag(event)">🍕 Pizza</div>
+        <div id="item2" class="item" draggable="true" ondragstart="drag(event)">🍔 Burger</div>
+        <div id="item3" class="item" draggable="true" ondragstart="drag(event)">🍟 Fries</div>
+    </div>
+
+    <!-- GEOLOCATION -->
+    <div class="box">
+        <h3>📍 Geolocation API</h3>
+        <button onclick="getLocation()">Get My Location 😎</button>
+        <p id="geo" class="glow"></p>
+    </div>
+
+    <!-- STORAGE -->
+    <div class="box">
+        <h3>💾 Web Storage Notes</h3>
+        <textarea id="note" placeholder="Yaha apni bakchodi likh 😄"></textarea><br>
+        <button onclick="saveNote()">Save Note</button>
+        <button onclick="loadNote()">Load Note</button>
+        <p id="status" class="glow"></p>
+    </div>
+
+</div>
+
+<script>
+// DRAG DROP
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    let data = ev.dataTransfer.getData("text");
+    ev.target.appendChild(document.getElementById(data));
+}
+
+// GEOLOCATION
+function getLocation() {
+    let output = document.getElementById("geo");
+
+    if (!navigator.geolocation) {
+        output.innerHTML = "Geolocation supported nahi hai 😢";
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+        (pos) => {
+            let lat = pos.coords.latitude;
+            let lon = pos.coords.longitude;
+
+            output.innerHTML =
+                "Latitude: " + lat +
+                "<br>Longitude: " + lon +
+                "<br><a href='https://www.google.com/maps?q=" + lat + "," + lon +
+                "' target='_blank'>Open in Google Maps 🗺️</a>";
+        },
+        () => {
+            output.innerHTML = "Permission deny kar diya 😭";
+        }
+    );
+}
+
+// STORAGE
+function saveNote() {
+    let note = document.getElementById("note").value;
+    localStorage.setItem("myNote", note);
+    document.getElementById("status").innerText = "Note save ho gaya 😎";
+}
+
+function loadNote() {
+    let note = localStorage.getItem("myNote");
+    document.getElementById("note").value = note || "Kuch save nahi hai 😅";
+    document.getElementById("status").innerText = "Note load ho gaya 📦";
+}
+
+// Load old note on refresh
+window.onload = function() {
+    loadNote();
+};
+</script>
+
+</body>
+</html>
